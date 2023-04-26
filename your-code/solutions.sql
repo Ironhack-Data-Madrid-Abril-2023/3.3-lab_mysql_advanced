@@ -54,8 +54,14 @@ GROUP BY
 		temp_1.`TITLE_ID`
 		;
 ---------
+CREATE TEMPORARY TABLE temp_3
 
 
 
 Challenge 3.
 
+CREATE TABLE most_profiting_authors
+	(au_id VARCHAR(45) NOT NULL,
+    profits DECIMAL(10, 2) NOT NULL,
+    PRIMARY KEY (au_id))
+    ;
