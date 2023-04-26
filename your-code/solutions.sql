@@ -24,28 +24,28 @@ INNER JOIN titles AS t
 ON ta.title_id = t.title_id
 INNER JOIN sales AS s
 ON t.title_id = s.title_id
-GROUP BY a.au_id, t.title_id
+GROUP BY t.title_id, a.au_id
 ORDER BY title_id DESC
 ;
 
 -- Step 3
 
-CREATE TEMPORARY TABLE temp3
+CREATE TEMPORARY TABLE IF NOT EXISTS temp_t
 SELECT a.au_id AS author_id, t.title_id AS title_id, sum(t.price * s.qty * t.royalty / 100 * ta.royaltyper / 100) AS sales_royalty, t.advance
 FROM authors AS a
-INNER JOIN titleauthor AS ta
+LEFT JOIN titleauthor AS ta
 ON a.au_id = ta.au_id
-INNER JOIN titles AS t
+LEFT JOIN titles AS t
 ON ta.title_id = t.title_id
-INNER JOIN sales AS s
+LEFT JOIN sales AS s
 ON t.title_id = s.title_id
-GROUP BY a.au_id, t.title_id
+GROUP BY t.title_id, a.au_id
 ;
 
 SELECT author_id, SUM(advance) + SUM(sales_royalty) AS total_earnings
-FROM temp3
+FROM temp_t
 GROUP BY author_id
-ORDER BY author_id DESC
+ORDER BY total_earnings DESC
 LIMIT 3
 ;
 
